@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: water-demand-api
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+      - uploads:/app/uploads
+      - models:/app/models
+    depends_on:
+      - redis
+      - db
+    environment:
+      - FLASK_APP=wsgi.py
+      - FLASK_ENV=production
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/water_demand
+      - REDIS_URL=redis://redis:6379/0
+      - CACHE_TYPE=redis
+      - CACHE_REDIS_URL=redis://redis:6379/1
+      - RATELIMIT_STORAGE_URL=redis://redis:6379/2
+    networks:
+      - app-network
+
+  db:
+    image: postgres:13-alpine
+    container_name: water-demand-db
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=water_demand
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    networks:
+      - app-network
+
+  redis:
+    image: redis:6-alpine
+    container_name: water-demand-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - app-network
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+  redis_data:
+  pgadmin_data:
+  uploads:
+  models:
+
+networks:
+  app-network:
+    driver: bridge

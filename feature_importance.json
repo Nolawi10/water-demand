@@ -1,0 +1,14 @@
+{
+    "DayOfYear": 0.0005541549781335151,
+    "Temperature_C": 0.0011172132255493298,
+    "Rainfall_mm": 0.0009916143755739856,
+    "Humidity_%": 0.0007009113990252873,
+    "SoilMoisture_%": 0.001150331053506678,
+    "WindSpeed_kmph": 0.0007146841005437963,
+    "PopulationDensity": 0.000600947670419931,
+    "PreviousDayUsage_L": 0.9940665306402338,
+    "Season_Autumn": 2.1223699738139552e-05,
+    "Season_Spring": 3.5645730336432005e-05,
+    "Season_Summer": 3.459387788769782e-05,
+    "Season_Winter": 1.2149249051422555e-05
+}
